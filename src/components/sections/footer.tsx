@@ -4,6 +4,7 @@ import * as React from "react";
 import { ArrowUp } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
 import { personal } from "@/data/portfolio";
+import { getAssetPath } from "@/lib/utils";
 
 const NAV = [
   { id: "home", label: "Home" },
@@ -99,7 +100,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/resume.pdf"
+                  href={getAssetPath("/resume.pdf")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-foreground/70 transition-colors hover:text-foreground"

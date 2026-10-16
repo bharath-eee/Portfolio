@@ -23,34 +23,23 @@ export function Contact() {
       toast.error("Please fill in all fields before sending.");
       return;
     }
-    setStatus("sending");
-    // Honest behavior: no fake success. We attempt to POST; if no backend handler
-    // is configured, we transparently tell the user.
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
-      });
-      if (res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setStatus("sent");
-        toast.success(`Message prepared! Dispatched directly to ${data.recipient || "bharath.eee.engineer@gmail.com"}.`);
-        if (data.mailtoUrl) {
-          window.location.href = data.mailtoUrl;
-        }
-        setName("");
-        setEmail("");
-        setMessage("");
-        setTimeout(() => setStatus("idle"), 4000);
-      } else {
-        toast.error("Could not send. Please email bharath.eee.engineer@gmail.com directly.");
-        setStatus("idle");
-      }
-    } catch {
-      toast.error("Network error. Please email bharath.eee.engineer@gmail.com directly.");
+    const recipient = "bharath.eee.engineer@gmail.com";
+    const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
+    const emailBody = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+    );
+    const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${emailBody}`;
+
+    setStatus("sent");
+    toast.success(`Message prepared! Opening email client addressed to ${recipient}.`);
+    window.location.href = mailtoUrl;
+
+    setTimeout(() => {
+      setName("");
+      setEmail("");
+      setMessage("");
       setStatus("idle");
-    }
+    }, 3000);
   };
 
   return (

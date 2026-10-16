@@ -6,6 +6,7 @@ import { ArrowRight, FileText } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
 import { Button } from "@/components/ui/button";
 import { personal } from "@/data/portfolio";
+import { getAssetPath } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
 const CircuitVisualization = dynamic(
@@ -148,7 +149,7 @@ export function Hero() {
               className="rounded-full border-border bg-surface text-foreground hover:bg-secondary cursor-pointer"
             >
               <a
-                href="/resume.pdf"
+                href={getAssetPath("/resume.pdf")}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View Resume PDF"

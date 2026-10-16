@@ -16,6 +16,7 @@ import {
   CheckCircle,
   FileText,
 } from "lucide-react";
+import { getAssetPath } from "@/lib/utils";
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -72,7 +73,7 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           <div className="flex flex-wrap items-center gap-2">
             {/* Open Raw PDF in New Tab */}
             <a
-              href="/resume.pdf"
+              href={getAssetPath("/resume.pdf")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-sky-500/40 bg-sky-500/10 text-xs font-mono text-sky-300 hover:bg-sky-500/20 hover:border-sky-400 transition-all cursor-pointer"
@@ -95,7 +96,7 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
 
             {/* Direct Download */}
             <a
-              href="/resume.pdf"
+              href={getAssetPath("/resume.pdf")}
               download
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-[#05070D] text-xs font-mono text-slate-300 hover:border-slate-500 hover:text-white transition-all cursor-pointer"
               title="Download PDF to computer"
