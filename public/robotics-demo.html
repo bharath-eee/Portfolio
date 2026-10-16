@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Industrial Robotic Arm Simulator</title>
+  <style>
+    :root {
+      --bg-main: #0a0b0e;
+      --bg-panel: #111318;
+      --border-color: #222630;
+      --text-primary: #f3f4f6;
+      --text-muted: #8b92a5;
+      --accent-blue: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      width: 100%;
+      max-width: 1240px;
+      height: 680px;
+    }
+
+    /* Left 3D Viewport */
+    .viewport-card {
+      position: relative;
+      background: radial-gradient(circle at 50% 60%, #131824 0%, #090a0f 75%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+
+    #canvas-container:active {
+      cursor: grabbing;
+    }
+
+    .viewport-header {
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      pointer-events: none;
+      font-family: monospace;
+    }
+
+    .status-badge {
+      position: absolute;
+      bottom: 20px;
+      left: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(17, 19, 24, 0.85);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: monospace;
+      color: var(--text-primary);
+      pointer-events: none;
+      transition: border-color 0.25s ease;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #6b7280;
+      transition: background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .status-badge.active .status-dot {
+      background: #3b82f6;
+      box-shadow: 0 0 10px #3b82f6;
+    }
+
+    /* Right Controls Panel */
+    .controls-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .panel-subtitle {
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .sliders-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .slider-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #d1d5db;
+      font-family: monospace;
+    }
+
+    .slider-limits {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #525866;
+      font-family: monospace;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: #262a36;
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #111318;
+      border: 2.5px solid #ffffff;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      border-color: var(--accent-blue);
+      background: var(--accent-blue);
+    }
+
+    /* Fixed Action Buttons: Zero Clipping */
+    .actions-row {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr 1fr;
+      gap: 8px;
+      margin: 22px 0 18px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: #171a22;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #222632;
+      border-color: #363c4e;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #090a0f;
+      border-color: #ffffff;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: #e5e7eb;
+    }
+
+    .btn-primary.playing {
+      background: #2563eb;
+      border-color: #3b82f6;
+      color: #ffffff;
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    /* Reference Footer */
+    .reference-box {
+      border-top: 1px solid var(--border-color);
+      padding-top: 14px;
+    }
+
+    .reference-title {
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-family: monospace;
+    }
+
+    .reference-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .reference-list strong {
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 900px) {
+      .demo-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .viewport-card {
+        height: 440px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="demo-layout">
+  <!-- 3D Viewport -->
+  <div class="viewport-card">
+    <div class="viewport-header">LIVE DEMO · INDUSTRIAL 5-DOF ROBOTIC MANIPULATOR</div>
+    <div id="canvas-container"></div>
+    <div id="status-badge" class="status-badge">
+      <span class="status-dot"></span>
+      <span id="status-text">Idle</span>
+      <span style="opacity: 0.4;">·</span>
+      <span id="payload-text" style="color: #9ca3af;">Payload: Stand</span>
+    </div>
+  </div>
+
+  <!-- Joint Controls Sidebar -->
+  <div class="controls-card">
+    <div>
+      <div class="panel-title">
+        <span>🖐️</span> JOINT CONTROLS
+      </div>
+      <p class="panel-subtitle">
+        Drag sliders to move the arm with damped motion or run the industrial sequence.
+      </p>
+
+      <div class="sliders-group">
+        <div class="slider-item">
+          <div class="slider-header"><span>BASE</span><span id="val-base">0°</span></div>
+          <input type="range" id="slider-base" min="-180" max="180" value="0" step="1" />
+          <div class="slider-limits"><span>-180°</span><span>180°</span></div>
+        </div>
+
+        <div class="slider-item">
+          <div class="slider-header"><span>SHOULDER</span><span id="val-shoulder">25°</span></div>
+          <input type="range" id="slider-shoulder" min="-45" max="90" value="25" step="1" />
+          <div class="slider-limits"><span>-45°</span><span>90°</span></div>
+        </div>
+
+        <div class="slider-item">
+          <div class="slider-header"><span>ELBOW</span><span id="val-elbow">-35°</span></div>
+          <input type="range" id="slider-elbow" min="-120" max="120" value="-35" step="1" />
+          <div class="slider-limits"><span>-120°</span><span>120°</span></div>
+        </div>
+
+        <div class="slider-item">
+          <div class="slider-header"><span>WRIST</span><span id="val-wrist">0°</span></div>
+          <input type="range" id="slider-wrist" min="-180" max="180" value="0" step="1" />
+          <div class="slider-limits"><span>-180°</span><span>180°</span></div>
+        </div>
+
+        <div class="slider-item">
+          <div class="slider-header"><span>GRIPPER</span><span id="val-gripper">60%</span></div>
+          <input type="range" id="slider-gripper" min="0" max="100" value="60" step="1" />
+          <div class="slider-limits"><span>0%</span><span>100%</span></div>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button class="btn" id="btn-home">⌂ Home</button>
+        <button class="btn btn-primary" id="btn-pick">▷ Pick &amp; Place</button>
+        <button class="btn" id="btn-reset">↺ Reset</button>
+      </div>
+    </div>
+
+    <div class="reference-box">
+      <div class="reference-title">JOINT REFERENCE</div>
+      <div class="reference-list">
+        <div><strong>Base</strong> — rotates turret left/right (yaw).</div>
+        <div><strong>Shoulder</strong> — tilts upper arm up/down (pitch).</div>
+        <div><strong>Elbow</strong> — bends forearm angle (pitch).</div>
+        <div><strong>Wrist</strong> — rolls gripper assembly (roll).</div>
+        <div><strong>Gripper</strong> — open (100%) / close (0%).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  const container = document.getElementById('canvas-container');
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
+  let camSpherical = { radius: 8.2, theta: 0.65, phi: 1.15 };
+  const camTarget = new THREE.Vector3(0, 0.3, 0);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  container.appendChild(renderer.domElement);
+
+  // Lighting
+  scene.add(new THREE.AmbientLight(0x94a3b8, 0.7));
+
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.3);
+  keyLight.position.set(5, 9, 6);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.set(1024, 1024);
+  keyLight.shadow.bias = -0.0001;
+  scene.add(keyLight);
+
+  // Directional Rim Light to pop dark metallic links against dark background
+  const rimLight = new THREE.DirectionalLight(0x60a5fa, 1.5);
+  rimLight.position.set(-6, 6, -5);
+  scene.add(rimLight);
+
+  const bounceLight = new THREE.DirectionalLight(0x38bdf8, 0.35);
+  bounceLight.position.set(0, -2, 4);
+  scene.add(bounceLight);
+
+  // Perspective Floor Grid
+  const grid = new THREE.GridHelper(12, 24, 0x254175, 0x1a202c);
+  grid.position.y = 0;
+  scene.add(grid);
+
+  // Materials
+  const armMat = new THREE.MeshStandardMaterial({ color: 0x0f243c, roughness: 0.35, metalness: 0.5 });
+  const darkJointMat = new THREE.MeshStandardMaterial({ color: 0x11151c, roughness: 0.35, metalness: 0.6 });
+  const accentMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.25, metalness: 0.6 });
+
+  // Mechanical Geometry Dimensions
+  const BASE_Y = 0;
+  const SHOULDER_H = 0.58;
+  const L1 = 1.4; // Upper arm length
+  const L2 = 1.1; // Forearm length
+  const TOOLHEAD_OFFSET = 0.22; // Center of grip point
+  const CUBE_SIZE = 0.22;
+
+  // Station Models (Fixed in world space, independent of turret)
+  function getReachPoint(baseDeg, shoulderDeg, elbowDeg) {
+    const b = THREE.MathUtils.degToRad(baseDeg);
+    const s = THREE.MathUtils.degToRad(shoulderDeg);
+    const e = THREE.MathUtils.degToRad(shoulderDeg + elbowDeg);
+    const totalForearm = L2 + TOOLHEAD_OFFSET;
+    const r = L1 * Math.sin(s) + totalForearm * Math.sin(e);
+    const y = BASE_Y + SHOULDER_H + L1 * Math.cos(s) + totalForearm * Math.cos(e);
+    return new THREE.Vector3(r * Math.sin(b), y, r * Math.cos(b));
+  }
+
+  const PICK_POSE = { base: 36, shoulder: 75, elbow: 54, wrist: 0, gripper: 60 };
+  const PLACE_POSE = { base: -48, shoulder: 75, elbow: 54, wrist: 0, gripper: 100 };
+
+  const pickCoords = getReachPoint(PICK_POSE.base, PICK_POSE.shoulder, PICK_POSE.elbow);
+  const placeCoords = getReachPoint(PLACE_POSE.base, PLACE_POSE.shoulder, PLACE_POSE.elbow);
+
+  // Stationary Pickup Stand
+  const pickupStation = new THREE.Group();
+  pickupStation.position.set(pickCoords.x, 0, pickCoords.z);
+  const pickupMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.34, 0.08, 36), darkJointMat);
+  pickupMesh.position.y = 0.04;
+  pickupMesh.receiveShadow = true;
+  pickupStation.add(pickupMesh);
+  const pickupRing = new THREE.Mesh(new THREE.RingGeometry(0.2, 0.26, 36), new THREE.MeshBasicMaterial({ color: 0xf59e0b, side: THREE.DoubleSide }));
+  pickupRing.rotation.x = -Math.PI / 2;
+  pickupRing.position.y = 0.082;
+  pickupStation.add(pickupRing);
+  scene.add(pickupStation);
+
+  // Stationary Drop Pad
+  const placeStation = new THREE.Group();
+  placeStation.position.set(placeCoords.x, 0, placeCoords.z);
+  const placeMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.36, 0.08, 36), accentMat);
+  placeMesh.position.y = 0.04;
+  placeMesh.receiveShadow = true;
+  placeStation.add(placeMesh);
+  const placeRing = new THREE.Mesh(new THREE.RingGeometry(0.22, 0.28, 36), new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide }));
+  placeRing.rotation.x = -Math.PI / 2;
+  placeRing.position.y = 0.082;
+  placeStation.add(placeRing);
+  scene.add(placeStation);
+
+  // Payload (Orange Cube)
+  const payloadCube = new THREE.Mesh(
+    new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE),
+    new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.25, metalness: 0.2, emissive: 0xb45309, emissiveIntensity: 0.2 })
+  );
+  payloadCube.castShadow = true;
+  payloadCube.receiveShadow = true;
+  scene.add(payloadCube);
+
+  // Kinematic Hierarchy
+  const baseGroup = new THREE.Group();
+  baseGroup.position.set(0, 0, 0);
+  scene.add(baseGroup);
+
+  const basePlate = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.78, 0.16, 36), darkJointMat);
+  basePlate.position.y = 0.08;
+  basePlate.receiveShadow = true;
+  baseGroup.add(basePlate);
+
+  const turretGroup = new THREE.Group();
+  turretGroup.position.set(0, 0.16, 0);
+  baseGroup.add(turretGroup);
+
+  const baseTurret = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.58, 0.36, 36), armMat);
+  baseTurret.position.y = 0.18;
+  baseTurret.castShadow = true;
+  turretGroup.add(baseTurret);
+
+  const baseRing = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.08, 36), accentMat);
+  baseRing.position.y = 0.38;
+  turretGroup.add(baseRing);
+
+  // Shoulder Pivot (around X axis)
+  const shoulderPivot = new THREE.Group();
+  shoulderPivot.position.y = SHOULDER_H - 0.16;
+  turretGroup.add(shoulderPivot);
+
+  const shoulderJointMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.44, 28), darkJointMat);
+  shoulderJointMesh.rotation.z = Math.PI / 2;
+  shoulderPivot.add(shoulderJointMesh);
+
+  const upperArm = new THREE.Mesh(new THREE.BoxGeometry(0.24, L1, 0.24), armMat);
+  upperArm.position.y = L1 / 2;
+  upperArm.castShadow = true;
+  shoulderPivot.add(upperArm);
+
+  // Elbow Pivot (around X axis)
+  const elbowPivot = new THREE.Group();
+  elbowPivot.position.y = L1;
+  shoulderPivot.add(elbowPivot);
+
+  const elbowJointMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.38, 24), darkJointMat);
+  elbowJointMesh.rotation.z = Math.PI / 2;
+  elbowPivot.add(elbowJointMesh);
+
+  const forearm = new THREE.Mesh(new THREE.BoxGeometry(0.18, L2, 0.18), armMat);
+  forearm.position.y = L2 / 2;
+  forearm.castShadow = true;
+  elbowPivot.add(forearm);
+
+  // Wrist Pivot (roll around Y axis)
+  const wristPivot = new THREE.Group();
+  wristPivot.position.y = L2;
+  elbowPivot.add(wristPivot);
+
+  const wristCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.08, 24), accentMat);
+  wristCollar.position.y = 0.04;
+  wristPivot.add(wristCollar);
+
+  const palm = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.1, 0.2), darkJointMat);
+  palm.position.y = 0.1;
+  palm.castShadow = true;
+  wristPivot.add(palm);
+
+  // Gripper Fingers
+  const leftFinger = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.26, 0.14), accentMat);
+  const rightFinger = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.26, 0.14), accentMat);
+  leftFinger.position.set(-0.13, 0.22, 0);
+  rightFinger.position.set(0.13, 0.22, 0);
+  leftFinger.castShadow = true;
+  rightFinger.castShadow = true;
+  wristPivot.add(leftFinger, rightFinger);
+
+  // Grip Attachment Point (center between fingers)
+  const gripPoint = new THREE.Group();
+  gripPoint.position.set(0, TOOLHEAD_OFFSET, 0);
+  wristPivot.add(gripPoint);
+
+  function resetCubePosition() {
+    scene.attach(payloadCube);
+    payloadCube.position.set(pickCoords.x, CUBE_SIZE / 2 + 0.08, pickCoords.z);
+    payloadCube.rotation.set(0, THREE.MathUtils.degToRad(PICK_POSE.base), 0);
+    placeRing.material.color.setHex(0x38bdf8);
+    document.getElementById('payload-text').textContent = 'Payload: Stand';
+    document.getElementById('payload-text').style.color = '#9ca3af';
+  }
+  resetCubePosition();
+
+  // State Management
+  const DEFAULT_STATE = { base: 0, shoulder: 25, elbow: -35, wrist: 0, gripper: 60 };
+  const HOME_STATE = { base: 0, shoulder: 0, elbow: 0, wrist: 0, gripper: 50 };
+
+  let currentJoints = { ...DEFAULT_STATE };
+  let targetJoints = { ...DEFAULT_STATE };
+  let isAnimating = false;
+  let animSequence = [];
+  let animStepIndex = 0;
+  let animStepStart = 0;
+  let stepFromJoints = { ...DEFAULT_STATE };
+
+  // UI Elements
+  const sliders = {
+    base: document.getElementById('slider-base'),
+    shoulder: document.getElementById('slider-shoulder'),
+    elbow: document.getElementById('slider-elbow'),
+    wrist: document.getElementById('slider-wrist'),
+    gripper: document.getElementById('slider-gripper')
+  };
+  const labels = {
+    base: document.getElementById('val-base'),
+    shoulder: document.getElementById('val-shoulder'),
+    elbow: document.getElementById('val-elbow'),
+    wrist: document.getElementById('val-wrist'),
+    gripper: document.getElementById('val-gripper')
+  };
+  const statusBadge = document.getElementById('status-badge');
+  const statusText = document.getElementById('status-text');
+  const payloadText = document.getElementById('payload-text');
+  const pickBtn = document.getElementById('btn-pick');
+
+  function setStatus(text, active = false) {
+    statusText.textContent = text;
+    statusBadge.classList.toggle('active', active);
+    pickBtn.classList.toggle('playing', active);
+  }
+
+  function syncUI(state) {
+    for (const key of ['base', 'shoulder', 'elbow', 'wrist']) {
+      const rounded = Math.round(state[key]);
+      sliders[key].value = rounded;
+      labels[key].textContent = `${rounded}°`;
+    }
+    const g = Math.round(state.gripper);
+    sliders.gripper.value = g;
+    labels.gripper.textContent = `${g}%`;
+  }
+
+  // Slider Input Listeners
+  Object.keys(sliders).forEach((key) => {
+    sliders[key].addEventListener('input', (e) => {
+      if (isAnimating) {
+        isAnimating = false;
+        setStatus('Manual Control', false);
+      }
+      targetJoints[key] = parseFloat(e.target.value);
+      labels[key].textContent = `${Math.round(targetJoints[key])}${key === 'gripper' ? '%' : '°'}`;
+    });
+  });
+
+  // Smooth Cubic Easing
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function runSequence(steps) {
+    isAnimating = true;
+    animSequence = steps;
+    animStepIndex = 0;
+    animStepStart = performance.now();
+    stepFromJoints = { ...currentJoints };
+    if (steps[0]?.status) setStatus(steps[0].status, true);
+  }
+
+  // Pick & Place Multi-Stage Keyframes
+  document.getElementById('btn-pick').addEventListener('click', () => {
+    resetCubePosition();
+    runSequence([
+      {
+        status: 'Approaching target...',
+        duration: 850,
+        to: { base: PICK_POSE.base, shoulder: 42, elbow: 32, wrist: 0, gripper: 100 }
+      },
+      {
+        status: 'Descending to cube...',
+        duration: 700,
+        to: { base: PICK_POSE.base, shoulder: PICK_POSE.shoulder, elbow: PICK_POSE.elbow, wrist: 0, gripper: 100 }
+      },
+      {
+        status: 'Gripping payload...',
+        duration: 450,
+        to: { base: PICK_POSE.base, shoulder: PICK_POSE.shoulder, elbow: PICK_POSE.elbow, wrist: 0, gripper: 60 },
+        onComplete: () => {
+          gripPoint.attach(payloadCube);
+          payloadText.textContent = 'Payload: Gripper';
+          payloadText.style.color = '#38bdf8';
+        }
+      },
+      {
+        status: 'Lifting payload...',
+        duration: 750,
+        to: { base: PICK_POSE.base, shoulder: 30, elbow: 18, wrist: 35, gripper: 60 }
+      },
+      {
+        status: 'Rotating to drop zone...',
+        duration: 1100,
+        to: { base: PLACE_POSE.base, shoulder: 32, elbow: 22, wrist: -25, gripper: 60 }
+      },
+      {
+        status: 'Lowering to pad...',
+        duration: 750,
+        to: { base: PLACE_POSE.base, shoulder: PLACE_POSE.shoulder, elbow: PLACE_POSE.elbow, wrist: 0, gripper: 60 }
+      },
+      {
+        status: 'Releasing payload...',
+        duration: 450,
+        to: { base: PLACE_POSE.base, shoulder: PLACE_POSE.shoulder, elbow: PLACE_POSE.elbow, wrist: 0, gripper: 100 },
+        onComplete: () => {
+          scene.attach(payloadCube);
+          payloadCube.position.set(placeCoords.x, CUBE_SIZE / 2 + 0.08, placeCoords.z);
+          payloadCube.rotation.set(0, THREE.MathUtils.degToRad(PLACE_POSE.base), 0);
+          placeRing.material.color.setHex(0x10b981);
+          payloadText.textContent = 'Payload: Placed ✓';
+          payloadText.style.color = '#10b981';
+        }
+      },
+      {
+        status: 'Retracting to standby...',
+        duration: 850,
+        to: { ...DEFAULT_STATE }
+      }
+    ]);
+  });
+
+  // Home Button
+  document.getElementById('btn-home').addEventListener('click', () => {
+    runSequence([
+      { status: 'Moving to Home...', duration: 800, to: { ...HOME_STATE } }
+    ]);
+  });
+
+  // Reset Button
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    resetCubePosition();
+    runSequence([
+      { status: 'Resetting demo...', duration: 700, to: { ...DEFAULT_STATE } }
+    ]);
+  });
+
+  // Apply Joint Angles to 3D Meshes
+  function updateArmHierarchy(state) {
+    turretGroup.rotation.y = THREE.MathUtils.degToRad(state.base);
+    shoulderPivot.rotation.x = THREE.MathUtils.degToRad(state.shoulder);
+    elbowPivot.rotation.x = THREE.MathUtils.degToRad(state.elbow);
+    wristPivot.rotation.y = THREE.MathUtils.degToRad(state.wrist);
+
+    const spread = 0.035 + (state.gripper / 100) * 0.14;
+    leftFinger.position.x = -spread;
+    rightFinger.position.x = spread;
+  }
+
+  // Interactive Orbit Camera Drag & Zoom
+  let isDragging = false, prevX = 0, prevY = 0;
+  container.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    prevX = e.clientX;
+    prevY = e.clientY;
+    container.setPointerCapture(e.pointerId);
+  });
+  window.addEventListener('pointerup', (e) => {
+    isDragging = false;
+    try { container.releasePointerCapture(e.pointerId); } catch (_) {}
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    camSpherical.theta -= (e.clientX - prevX) * 0.007;
+    camSpherical.phi = Math.max(0.25, Math.min(1.48, camSpherical.phi - (e.clientY - prevY) * 0.007));
+    prevX = e.clientX;
+    prevY = e.clientY;
+  });
+  container.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    camSpherical.radius = Math.max(3.5, Math.min(14, camSpherical.radius + e.deltaY * 0.006));
+  }, { passive: false });
+
+  function updateCamera() {
+    camera.position.x = camTarget.x + camSpherical.radius * Math.sin(camSpherical.phi) * Math.sin(camSpherical.theta);
+    camera.position.y = camTarget.y + camSpherical.radius * Math.cos(camSpherical.phi);
+    camera.position.z = camTarget.z + camSpherical.radius * Math.sin(camSpherical.phi) * Math.cos(camSpherical.theta);
+    camera.lookAt(camTarget);
+  }
+
+  // Main Render & Animation Loop
+  function animate(now) {
+    requestAnimationFrame(animate);
+
+    if (isAnimating && animSequence.length > 0) {
+      const step = animSequence[animStepIndex];
+      const elapsed = now - animStepStart;
+      const progress = Math.min(1, elapsed / step.duration);
+      const eased = easeInOutCubic(progress);
+
+      for (const key of Object.keys(currentJoints)) {
+        currentJoints[key] = stepFromJoints[key] + (step.to[key] - stepFromJoints[key]) * eased;
+      }
+      targetJoints = { ...currentJoints };
+      syncUI(currentJoints);
+
+      if (progress >= 1) {
+        if (step.onComplete) step.onComplete();
+        animStepIndex++;
+        if (animStepIndex < animSequence.length) {
+          animStepStart = now;
+          stepFromJoints = { ...currentJoints };
+          setStatus(animSequence[animStepIndex].status, true);
+        } else {
+          isAnimating = false;
+          setStatus('Idle', false);
+        }
+      }
+    } else {
+      // Smooth mechanical damping when user drags sliders manually
+      let changed = false;
+      for (const key of Object.keys(currentJoints)) {
+        const diff = targetJoints[key] - currentJoints[key];
+        if (Math.abs(diff) > 0.04) {
+          currentJoints[key] += diff * 0.14;
+          changed = true;
+        }
+      }
+      if (changed) {
+        syncUI(currentJoints);
+      }
+    }
+
+    updateArmHierarchy(currentJoints);
+    updateCamera();
+    renderer.render(scene, camera);
+  }
+
+  requestAnimationFrame(animate);
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+</script>
+</body>
+</html>
