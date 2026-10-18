@@ -1,4 +1,4 @@
 User-Agent: *
 Allow: /
 
-Sitemap: https://bharath-eee.github.io/sitemap.xml
+Sitemap: https://bharath-eee.github.io/Portfolio/sitemap.xml
