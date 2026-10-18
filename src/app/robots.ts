@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://bharath-eee.github.io/sitemap.xml",
+    sitemap: "https://bharath-eee.github.io/Portfolio/sitemap.xml",
   };
 }

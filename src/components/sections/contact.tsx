@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { getAssetPath } from "@/lib/utils";
 
 export function Contact() {
   const [name, setName] = React.useState("");
@@ -121,7 +122,7 @@ export function Contact() {
                 </div>
               </a>
               <a
-                href="/resume.pdf"
+                href={getAssetPath("/resume.pdf")}
                 download
                 className="group flex items-center gap-3 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-foreground/25"
               >

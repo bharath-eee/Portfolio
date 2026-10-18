@@ -13,7 +13,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 // (badge component not used here; kept imports lean)
-import { cn } from "@/lib/utils";
+import { cn, getAssetPath } from "@/lib/utils";
 
 const STATUS_STYLES: Record<ProjectStatus, string> = {
   Shipped: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
@@ -71,7 +71,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
         {project.image ? (
           <>
             <img
-              src={project.image}
+              src={getAssetPath(project.image)}
               alt={project.title}
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
@@ -193,7 +193,7 @@ export function Projects() {
               {active.image && (
                 <div className="relative -mx-6 -mt-6 mb-4 h-48 overflow-hidden rounded-t-lg border-b border-border sm:h-64">
                   <img
-                    src={active.image}
+                    src={getAssetPath(active.image)}
                     alt={active.title}
                     className="h-full w-full object-cover"
                   />
@@ -319,7 +319,7 @@ export function Projects() {
                       >
                         <div className="relative aspect-video w-full overflow-hidden bg-background">
                           <img
-                            src={item.src}
+                            src={getAssetPath(item.src)}
                             alt={item.title}
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />

@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bharath-eee.github.io"),
+  metadataBase: new URL("https://bharath-eee.github.io/Portfolio"),
   title: "Bharath Suresh | Electrical Engineering, AI, IoT & Robotics",
   description:
     "Electrical and Electronics Engineering student exploring how AI, IoT, embedded systems, and robotics work together to build intelligent, real-world solutions.",
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
   authors: [{ name: "Bharath Suresh", url: "https://github.com/bharath-eee" }],
   creator: "Bharath Suresh",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/Portfolio/favicon.svg",
   },
   openGraph: {
     title: "Bharath Suresh | Electrical Engineering, AI, IoT & Robotics",
     description:
       "Electrical Engineering meets Artificial Intelligence. Explore projects in IoT, embedded systems, robotics, and intelligent automation.",
-    url: "https://bharath-eee.github.io",
+    url: "https://bharath-eee.github.io/Portfolio",
     siteName: "Bharath Suresh — Portfolio",
     type: "website",
     locale: "en_US",

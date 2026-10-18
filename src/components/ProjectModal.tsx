@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Project } from "@/data/portfolioData";
 import { soundFx } from "@/utils/soundEffects";
+import { getAssetPath } from "@/lib/utils";
 import {
   X,
   ExternalLink,
@@ -47,10 +48,11 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
   if (!project) return null;
 
-  const currentImageSrc =
+  const currentImageSrc = getAssetPath(
     project.gallery && project.gallery.length > 0
       ? project.gallery[activeImageIndex]?.src || project.image
-      : project.image;
+      : project.image
+  );
 
   const currentImageCaption =
     project.gallery && project.gallery.length > 0
@@ -145,7 +147,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   }`}
                 >
                   <Image
-                    src={item.src}
+                    src={getAssetPath(item.src)}
                     alt={item.title}
                     fill
                     sizes="(max-width: 768px) 50vw, 25vw"
@@ -182,7 +184,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                 playsInline
                 className="w-full max-h-[380px] object-contain bg-black"
               >
-                <source src={project.videos[activeVideoIndex].src} type="video/mp4" />
+                <source src={getAssetPath(project.videos[activeVideoIndex].src)} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>

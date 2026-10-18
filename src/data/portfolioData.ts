@@ -1,3 +1,5 @@
+import { getAssetPath } from "@/lib/utils";
+
 export interface ProjectGalleryItem {
   src: string;
   title: string;
@@ -204,7 +206,7 @@ export const PORTFOLIO_DATA = {
       status: "Completed",
       shortDescription: "An IoT-enabled EV charging station designed for remote monitoring, charging control, energy measurement, and cellular GSM communication.",
       fullDescription: "A complete end-to-end electrical and IoT telemetry system that continuously monitors 6 critical AC parameters (Voltage, Current, Power, Energy accumulator, Frequency, and Power Factor) using an ESP8266 NodeMCU and PZEM-004T v3.0 sensor. Features cellular GSM alerts via SIM800L/900, low power-factor visual alarm, local 16x2 I2C LCD interface, and a remote cloud MySQL/Flask backend with web telemetry dashboard.",
-      image: "/images/projects/meter_hardware_demo.png",
+      image: getAssetPath("/images/projects/meter_hardware_demo.png"),
       repoUrl: "https://github.com/bharath-eee/Energy_Meter",
       demoUrl: "https://energydata.netlify.app",
       hardware: ["ESP8266 NodeMCU", "PZEM-004T v3.0 AC Sensor (80-260V / 100A)", "SIM800L / SIM900 GSM Module", "16x2 I2C LCD (0x27)", "Push-button cycle switch", "Low PF Alert LED (GPIO15)"],
@@ -218,12 +220,12 @@ export const PORTFOLIO_DATA = {
       ],
       gallery: [
         {
-          src: "/images/projects/meter_hardware_demo.png",
+          src: getAssetPath("/images/projects/meter_hardware_demo.png"),
           title: "Physical Bench Hardware Prototype",
           caption: "Live hardware bench setup featuring ESP8266 NodeMCU, PZEM-004T current coil, GSM SIM800L module, and 16x2 I2C LCD readout."
         },
         {
-          src: "/images/projects/ev_charging_station.jpg",
+          src: getAssetPath("/images/projects/ev_charging_station.jpg"),
           title: "EV Charging Station & Power Telemetry Hub",
           caption: "Dual AC parameter monitoring station concept with real-time cloud data pipeline."
         }
@@ -335,7 +337,7 @@ export const PORTFOLIO_DATA = {
       status: "Completed",
       shortDescription: "An intelligent personal automation assistant and scheduling manager designed to organize objectives and automate scheduling from emails, calendar events, and bill invoices.",
       fullDescription: "LifePilot AI is a production-grade full-stack personal automation architecture. It orchestrates local and cloud-based LLMs via OpenRouter to process emails, calendar events, and bill invoices, converting unstructured text into structured task schemas and automated desktop notifications. Built with FastAPI on the backend, React (TypeScript) with Vite on the frontend, and MongoDB persistence with Docker Compose deployment.",
-      image: "/images/projects/lifepilot_ai.jpg",
+      image: getAssetPath("/images/projects/lifepilot_ai.jpg"),
       repoUrl: "https://github.com/bharath-eee/lifepilot-ai",
       hardware: ["Local GPU Workstation / Docker Host", "Google OAuth API Gateway", "OpenRouter AI Gateway"],
       software: ["FastAPI (Python 3.10+)", "React 19 + TypeScript + Vite", "Motor (Async MongoDB Driver)", "OpenRouter AI Gateway", "Tailwind CSS", "Docker Compose"],
@@ -348,7 +350,7 @@ export const PORTFOLIO_DATA = {
       ],
       gallery: [
         {
-          src: "/images/projects/lifepilot_ai.jpg",
+          src: getAssetPath("/images/projects/lifepilot_ai.jpg"),
           title: "LifePilot AI Command Architecture",
           caption: "Full-stack personal automation assistant combining FastAPI backend and React frontend."
         }
@@ -412,7 +414,7 @@ docker-compose down`
       status: "Completed",
       shortDescription: "A voice, vision, and LLM-controlled 6-DOF robotic arm featuring real-time polar radar object tracking, background difference masking, and inverse kinematics.",
       fullDescription: "AZORE is an advanced robotic manipulation platform that bridges multimodal AI with physical actuation. The system combines an overhead computer vision feed with background subtraction difference masking and polar angle tracking, a custom desktop command center HUD with 'Hey Azore' voice recognition, a 3-link inverse kinematics solver, and an ESP8266 Wi-Fi microcontroller driving 6 multi-axis servo joints.",
-      image: "/images/projects/real_arm_hardware_1.jpg",
+      image: getAssetPath("/images/projects/real_arm_hardware_1.jpg"),
       repoUrl: "https://github.com/bharath-eee/Robotic-Arm-by-LLM",
       hardware: [
         "ESP8266 NodeMCU Wi-Fi Microcontroller",
@@ -442,42 +444,42 @@ docker-compose down`
       ],
       gallery: [
         {
-          src: "/images/projects/real_arm_hardware_1.jpg",
+          src: getAssetPath("/images/projects/real_arm_hardware_1.jpg"),
           title: "Physical 3D-Printed Articulated Arm & ESP8266",
           caption: "High-contrast product shot of the real 3D-printed blue PLA 6-DOF arm gripping an ESP8266 NodeMCU microcontroller."
         },
         {
-          src: "/images/projects/real_robotic_arm_bench.jpg",
+          src: getAssetPath("/images/projects/real_robotic_arm_bench.jpg"),
           title: "Hardware Bench & Kinematic Calibration",
           caption: "Live lab bench setup showing calibrated link segment dimensions (7.5cm base, 16cm lower arm, 16cm upper arm, 11cm gripper) and laptop control interface."
         },
         {
-          src: "/images/projects/real_arm_hardware_3.jpg",
+          src: getAssetPath("/images/projects/real_arm_hardware_3.jpg"),
           title: "Overhead CV Polar Radar Tracking",
           caption: "Computer vision polar radar tracking real objects: Loupe at 118°, Power Drill at 79°, and base manipulator target vectors."
         },
         {
-          src: "/images/projects/arm_aruco_calibration_output.png",
+          src: getAssetPath("/images/projects/arm_aruco_calibration_output.png"),
           title: "OpenCV ArUco Marker Calibration & Vector Ray",
           caption: "Accurate physical workspace mapping: 22.6 cm distance, 101° angle, and 26.0 cm object target vector."
         },
         {
-          src: "/images/projects/azore_command_center.png",
+          src: getAssetPath("/images/projects/azore_command_center.png"),
           title: "AZORE Robotic Command Center Desktop HUD",
           caption: "Custom desktop interface with voice trigger ('Hey Azore'), scanning radar, and COM3 hardware serial connectivity."
         },
         {
-          src: "/images/projects/robotic_arm_radar_cv.png",
+          src: getAssetPath("/images/projects/robotic_arm_radar_cv.png"),
           title: "CV Difference Mask & Angular Rays",
           caption: "Real-time background subtraction difference mask targeting objects at 104°, 68°, and 50°."
         },
         {
-          src: "/images/projects/robotic_arm_overhead.png",
+          src: getAssetPath("/images/projects/robotic_arm_overhead.png"),
           title: "Top-Down Workspace Calibration",
           caption: "Overhead camera calibration with green 90° reference meridian and 180° radial coordinate sweep area."
         },
         {
-          src: "/images/projects/arm_sim_3d_visualizer.png",
+          src: getAssetPath("/images/projects/arm_sim_3d_visualizer.png"),
           title: "Three.js 3D Kinematics Visualizer",
           caption: "Interactive 3D simulation solving inverse kinematics and reachable workspace envelope in real-time."
         }
@@ -581,7 +583,7 @@ python detect.py --target nearest --arm-host 192.168.137.241 --auto-execute`
       status: "Concept / Planned",
       shortDescription: "An intelligent electrical load classification concept designed to identify appliances using transient current waveforms and embedded machine learning.",
       fullDescription: "A Non-Intrusive Load Monitoring (NILM) architecture combining high-speed electrical sensor sampling with embedded TinyML neural networks on an ESP32. By sampling current and voltage transient waveforms through an ACS712 sensor and performing Fast Fourier Transforms (FFT), the system extracts frequency harmonic signatures to identify appliances like Fans, Bulbs, Motors, and Iron boxes.",
-      image: "/images/projects/eload_classifier.jpg",
+      image: getAssetPath("/images/projects/eload_classifier.jpg"),
       hardware: ["ESP32 Dual-Core MCU", "ACS712 Current Sensor (20A/30A)", "ZMPT101B Voltage Sensor", "OLED Status Display"],
       software: ["TinyML / TensorFlow Lite Micro", "Edge Impulse Studio", "Embedded C++", "Fast Fourier Transform (FFT)"],
       features: [
@@ -637,7 +639,7 @@ python detect.py --target nearest --arm-host 192.168.137.241 --auto-execute`
       status: "Completed",
       shortDescription: "Retrieval-Augmented Generation chatbot system deployed with contextual embeddings and document retrieval.",
       fullDescription: "A working RAG system built to explore document ground-truth retrieval, vector similarity matching, and conversational question-answering. Features dynamic knowledge ingestion and interactive query answering.",
-      image: "/images/projects/lifepilot_ai.jpg",
+      image: getAssetPath("/images/projects/lifepilot_ai.jpg"),
       repoUrl: "https://github.com/bharath-eee/my_first_rag",
       demoUrl: "https://bharath-eee.github.io/my_first_rag/",
       hardware: ["Cloud Compute"],
@@ -656,7 +658,7 @@ python detect.py --target nearest --arm-host 192.168.137.241 --auto-execute`
       status: "Completed",
       shortDescription: "WiFi-controlled electrical switching and relay actuation firmware for automated power management.",
       fullDescription: "Embedded firmware for ESP8266 facilitating wireless control over high-voltage AC relays. Features local web server control, persistent state storage, and instant remote switching.",
-      image: "/images/projects/meter_hardware_demo.png",
+      image: getAssetPath("/images/projects/meter_hardware_demo.png"),
       repoUrl: "https://github.com/bharath-eee/esp8266_switching",
       hardware: ["ESP8266", "Relay Module", "Optocoupler Isolation", "AC Power Supply"],
       software: ["C++", "ESP8266WebServer", "HTML5 Interface"],
@@ -674,7 +676,7 @@ python detect.py --target nearest --arm-host 192.168.137.241 --auto-execute`
       status: "Completed",
       shortDescription: "An end-to-end neural machine translation system and dataset processing pipeline converting English text into Tamil using Seq2Seq transformer architectures.",
       fullDescription: "IndicNLP leverages Hugging Face's transformers and fine-tuned sequence-to-sequence language models (suriya7/English-to-Tamil) along with the gopi30 bilingual corpus to perform high-accuracy neural translation. Features interactive command-line translation loops, automated dataset ingestion with pandas DataFrame exports, and an automated electrical engineering MCQ examination generator.",
-      image: "/images/projects/indic_nlp_terminal.jpg",
+      image: getAssetPath("/images/projects/indic_nlp_terminal.jpg"),
       repoUrl: "https://github.com/bharath-eee/english-tamil-neural-translator",
       hardware: ["Local CUDA GPU / CPU Compute", "Hugging Face Model Hub", "PyTorch Execution Engine"],
       software: ["PyTorch", "HuggingFace Transformers", "Seq2Seq Model (suriya7)", "HuggingFace Datasets (gopi30)", "Pandas", "Python-Docx"],
@@ -687,7 +689,7 @@ python detect.py --target nearest --arm-host 192.168.137.241 --auto-execute`
       ],
       gallery: [
         {
-          src: "/images/projects/indic_nlp_terminal.jpg",
+          src: getAssetPath("/images/projects/indic_nlp_terminal.jpg"),
           title: "HuggingFace Seq2Seq Neural Translation & Loss Monitor",
           caption: "Live inference environment translating English sentences to authentic Tamil script with PyTorch and bilingual loss curve telemetry."
         }

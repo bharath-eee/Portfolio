@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Project, PORTFOLIO_DATA } from "@/data/portfolioData";
 import { soundFx } from "@/utils/soundEffects";
+import { getAssetPath } from "@/lib/utils";
 import ProjectModal from "./ProjectModal";
 import { ExternalLink, ArrowUpRight, Cpu, Layers, Sparkles, Terminal } from "lucide-react";
 import { GithubIcon } from "./SocialIcons";
@@ -97,7 +98,7 @@ export default function ProjectsSection() {
             {/* Top Image Preview Banner */}
             <div className="relative w-full h-60 sm:h-72 overflow-hidden bg-slate-900">
               <Image
-                src={project.image}
+                src={getAssetPath(project.image)}
                 alt={project.title}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"

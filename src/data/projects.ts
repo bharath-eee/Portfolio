@@ -1,3 +1,5 @@
+import { getAssetPath } from "@/lib/utils";
+
 export type ProjectStatus = "Shipped" | "In Development" | "Editable" | "Concept / Planned";
 
 export type ProjectGalleryItem = {
@@ -34,7 +36,7 @@ export const projects: Project[] = [
     index: "01",
     title: "Smart EV Charging Station & IoT Energy Meter",
     category: "Electrical Engineering / IoT",
-    image: "/images/projects/meter_hardware_demo.png",
+    image: getAssetPath("/images/projects/meter_hardware_demo.png"),
     summary:
       "An IoT-enabled EV charging station developed for energy monitoring, remote communication, and charging session management.",
     description:
@@ -52,12 +54,12 @@ export const projects: Project[] = [
     demoUrl: "https://energydata.netlify.app",
     gallery: [
       {
-        src: "/images/projects/meter_hardware_demo.png",
+        src: getAssetPath("/images/projects/meter_hardware_demo.png"),
         title: "Physical Bench Hardware Prototype",
         caption: "Live hardware bench setup featuring ESP8266 NodeMCU, PZEM-004T current coil, GSM SIM800L module, and 16x2 I2C LCD readout.",
       },
       {
-        src: "/images/projects/ev_charging_station.jpg",
+        src: getAssetPath("/images/projects/ev_charging_station.jpg"),
         title: "EV Charging Station & Power Telemetry Hub",
         caption: "Dual AC parameter monitoring station concept with real-time cloud data pipeline.",
       },
@@ -76,7 +78,7 @@ export const projects: Project[] = [
     index: "02",
     title: "AZORE: LLM & Vision Controlled Robotic Arm",
     category: "Robotics / Multimodal AI",
-    image: "/images/projects/real_arm_hardware_1.jpg",
+    image: getAssetPath("/images/projects/real_arm_hardware_1.jpg"),
     summary:
       "A voice, vision, and LLM-controlled 6-DOF robotic arm featuring real-time polar radar object tracking, background difference masking, and inverse kinematics.",
     description:
@@ -93,27 +95,27 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/bharath-eee/Robotic-Arm-by-LLM",
     gallery: [
       {
-        src: "/images/projects/real_arm_hardware_1.jpg",
+        src: getAssetPath("/images/projects/real_arm_hardware_1.jpg"),
         title: "Physical 3D-Printed Articulated Arm & ESP8266",
         caption: "Product shot of the real 3D-printed blue PLA 6-DOF articulated arm gripping an ESP8266 microcontroller.",
       },
       {
-        src: "/images/projects/real_arm_hardware_2.jpg",
+        src: getAssetPath("/images/projects/real_arm_hardware_2.jpg"),
         title: "Multi-Axis Servo Actuators & Wiring",
         caption: "Close-up of base continuous rotation servo, shoulder/elbow high-torque servos, and gripper assembly.",
       },
       {
-        src: "/images/projects/real_robotic_arm_bench.jpg",
+        src: getAssetPath("/images/projects/real_robotic_arm_bench.jpg"),
         title: "Hardware Bench & Workspace",
         caption: "Bench setup with serial debug console, Wi-Fi communication, and calibration grid.",
       },
       {
-        src: "/images/projects/arm_sim_3d_visualizer.png",
+        src: getAssetPath("/images/projects/arm_sim_3d_visualizer.png"),
         title: "3D Inverse Kinematics Visualizer",
         caption: "Interactive 3D simulation mapping real-time Cartesian targets to joint angle solutions.",
       },
       {
-        src: "/images/projects/robotic_arm_ai.jpg",
+        src: getAssetPath("/images/projects/robotic_arm_ai.jpg"),
         title: "AZORE Studio Vision Workspace",
         caption: "Studio concept displaying optical object detection and pick-and-place trajectories.",
       },
@@ -132,7 +134,7 @@ export const projects: Project[] = [
     index: "03",
     title: "LifePilot AI",
     category: "AI Agents / Full-Stack Automation",
-    image: "/images/projects/lifepilot_ai.jpg",
+    image: getAssetPath("/images/projects/lifepilot_ai.jpg"),
     summary:
       "A full-stack personal automation assistant that processes invoices, emails, and calendar events into automated scheduling and task workflows.",
     description:
@@ -149,7 +151,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/bharath-eee/lifepilot-ai",
     gallery: [
       {
-        src: "/images/projects/lifepilot_ai.jpg",
+        src: getAssetPath("/images/projects/lifepilot_ai.jpg"),
         title: "LifePilot AI Command Architecture",
         caption: "Full-stack personal automation assistant combining FastAPI backend, React UI, and asynchronous worker queues.",
       },
@@ -168,7 +170,7 @@ export const projects: Project[] = [
     index: "04",
     title: "E-Load Classifier",
     category: "Electrical Engineering / TinyML",
-    image: "/images/projects/eload_classifier.jpg",
+    image: getAssetPath("/images/projects/eload_classifier.jpg"),
     summary:
       "An embedded machine learning concept for classifying electrical appliances using current measurements.",
     description:
@@ -186,7 +188,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/bharath-eee",
     gallery: [
       {
-        src: "/images/projects/eload_classifier.jpg",
+        src: getAssetPath("/images/projects/eload_classifier.jpg"),
         title: "E-Load Disaggregation Prototype",
         caption: "ACS712 current transducer sampling electrical loads into ESP32 edge classifier.",
       },
