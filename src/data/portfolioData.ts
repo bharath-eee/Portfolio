@@ -87,7 +87,7 @@ export const PORTFOLIO_DATA = {
     location: "Tamil Nadu, India",
     education: {
       degree: "B.E. in Electrical and Electronics Engineering",
-      institution: "Engineering College", // Editable
+      institution: "V.S.B Engineering College", // Editable
       expectedGraduation: "2027",
       cgpa: "Editable upon semester verification"
     },
@@ -759,7 +759,7 @@ python pdf.py`
       id: "j-edu",
       type: "Education",
       title: "B.E. in Electrical and Electronics Engineering",
-      organization: "Engineering College / University",
+      organization: "V.S.B Engineering College",
       period: "2023 - 2027 (Present)",
       description: "Pursuing rigorous coursework covering Power Electronics, Circuit Analysis, Digital Systems, and Microcontrollers. Conducting independent research into AI-hardware integration.",
       highlights: [
