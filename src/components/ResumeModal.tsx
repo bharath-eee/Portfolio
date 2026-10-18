@@ -179,6 +179,9 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                 {personal.education.institution} • {personal.location}
               </p>
               <p className="text-xs text-slate-400 print:text-gray-700 mt-2">
+                <strong>Specialization areas:</strong> Power systems, Embedded systems, AI
+              </p>
+              <p className="text-xs text-slate-400 print:text-gray-700 mt-1">
                 <strong>Core Coursework:</strong> Circuit Theory, Electrical Machines I & II, Power Systems,
                 Power Electronics, Microcontrollers, Protection & Switchgear, Digital Logic, Electronic
                 Sensors.

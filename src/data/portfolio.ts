@@ -67,9 +67,9 @@ export const education = [
   {
     id: "ug",
     degree: "B.E. — Electrical and Electronics Engineering",
-    institution: "Undergraduate Engineering Program",
+    institution: "V.S.B Engineering College",
     period: "2023 – 2027 (Expected)",
-    notes: "Specialization areas: Power systems, Embedded systems, AI applications.",
+    notes: "Specialization areas: Power systems, Embedded systems, AI",
   },
 ] as const;
 

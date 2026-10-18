@@ -70,9 +70,6 @@ export function About() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 border-t border-border pt-3 font-mono-tech text-[11px] uppercase tracking-wider text-muted-foreground/70">
-                Editable section — institution details to be added.
-              </p>
             </motion.div>
           </div>
 

@@ -86,8 +86,9 @@ export const PORTFOLIO_DATA = {
     linkedin: "https://www.linkedin.com/in/bharath-s-b22842329/",
     location: "Tamil Nadu, India",
     education: {
-      degree: "B.E. in Electrical and Electronics Engineering",
-      institution: "V.S.B Engineering College", // Editable
+      degree: "B.E. — Electrical and Electronics Engineering",
+      institution: "V.S.B Engineering College",
+      specialization: "Power systems, Embedded systems, AI",
       expectedGraduation: "2027",
       cgpa: "Editable upon semester verification"
     },
@@ -758,7 +759,7 @@ python pdf.py`
     {
       id: "j-edu",
       type: "Education",
-      title: "B.E. in Electrical and Electronics Engineering",
+      title: "B.E. — Electrical and Electronics Engineering",
       organization: "V.S.B Engineering College",
       period: "2023 - 2027 (Present)",
       description: "Pursuing rigorous coursework covering Power Electronics, Circuit Analysis, Digital Systems, and Microcontrollers. Conducting independent research into AI-hardware integration.",
